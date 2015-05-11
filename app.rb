@@ -7,7 +7,8 @@ require('./lib/list')
 require('pg')
 
 get("/") do
-  erb(:index)
+  @tasks = Task.all()
+   erb(:index)
 end
 
 get("/lists/new") do
@@ -18,20 +19,34 @@ post("/lists") do
   name = params.fetch("name")
   list = List.new({:name => name, :id => nil})
   list.save()
-  erb(:success)
+  erb(:index)
 end
+
+post("/tasks") do
+  description = params.fetch("description")
+  task = Task.new({:description => description, :id => nil, :done => false})
+  task.save()
+  @tasks = Task.all()
+  erb(:index)
+end
+
 
 get("/lists") do
   @lists = List.all()
   erb(:lists)
 end
 
-get('/tasks/:id/edit') do
+# get("/tasks") do
+#   @tasks = Task.all()
+#   erb(:index)
+# end
+
+get('/task/:id/edit') do
   @task = Task.find(params.fetch("id").to_i())
   erb(:task_edit)
 end
 
-patch("/tasks/:id") do
+patch("/task/:id") do
   description = params.fetch("description")
   @task = Task.find(params.fetch("id").to_i())
   @task.update({:description => description})
