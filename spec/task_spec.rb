@@ -11,4 +11,12 @@ describe(Task) do
      expect(Task.not_done()).to(eq(not_done_tasks))
    end
  end
+
+ describe(Task) do
+  it("tells which list it belongs to") do
+    list = List.create({:name => "list"})
+    task = Task.create({:description => "task", :list_id => list.id})
+    expect(task.list()).to(eq(list))
+    end
+  end
 end
